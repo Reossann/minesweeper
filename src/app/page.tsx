@@ -30,6 +30,17 @@ const down = (n: number) => {
 down(10);
 
 export default function Home() {
+  const [board, setboard] = useState([
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
   const [samplePoints, setSamplePoints] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   console.log(samplePoints);
   const [sampleCounter, setSampleCounter] = useState(0);
@@ -44,11 +55,11 @@ export default function Home() {
   console.log(TotalPoint);
   return (
     <div className={styles.container}>
-      <div
-        className={styles.samplecell}
-        style={{ backgroundPosition: `${-30 * sampleCounter}px` }}
-      />
-      <button onClick={clickHandler}>クリック</button>
+      <div className={styles.board}>
+        {board.map((row, y) =>
+          row.map((color, x) => <button className={styles.cell} key={`${x}-${y}`} />),
+        )}
+      </div>
     </div>
   );
 }
