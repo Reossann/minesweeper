@@ -22,8 +22,9 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border: 2px solid;
-  border-color: black blue blue blueviolet;
+  background-color: #4c545c;
+  border: 5px solid;
+  border-color: #707880 #222a32 #222a32 #707880;
 }
 
 .samplecell {
