@@ -25,19 +25,17 @@ const bom = (b: number[][]) => {
         if (ram === 1) {
           newbom[y][x] = 100;
           bombcounts += 1;
-          console.log(bombcounts);
         }
       }
     }
   }
   if (bombcounts !== 10) {
-    console.log(80);
     return bom(newbom);
   }
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
       let bommmmmmm = 0;
-      if (newbom[y][x] !== 20 && newbom[y][x] !== 100) {
+      if (newbom[y][x] !== 100) {
         for (const [dy, dx] of directions) {
           if (newbom[y + dy] !== undefined) {
             if (newbom[y + dy][x + dx] === 100) {
@@ -58,6 +56,13 @@ const calc = (bombmap: number[][], userinputs: number[][]) => {
   const newcalc = structuredClone(bombmap);
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
+      if (userinputs[y][x] === 1 || userinputs[y][x] === 2) {
+        newcalc[y][x] = userinputs[y][x];
+        continue;
+      }
+      if (newcalc[y][x] === userinputs[y][x]) {
+        continue;
+      }
       newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
     }
   }
@@ -76,6 +81,45 @@ const bomcalc = (bombmap: number[][], userinputs: number[][]) => {
   }
 };
 
+const remove_all = (calcboard: number[][], userinputs: number[][]) => {
+  const newuser = structuredClone(userinputs);
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      if (newuser[y][x] === 20) {
+        console.log(x, y);
+        if (23 <= calcboard[y][x] && calcboard[y][x] <= 30) {
+          console.log(444);
+          continue;
+        }
+
+        for (const [dy, dx] of directions) {
+          if (calcboard[y + dy] === undefined) {
+            continue;
+          }
+          if (calcboard[y + dy][x + dx] === 100) {
+            calcboard[y][x] = calcboard[y][x] + 20;
+            break;
+          }
+          if (calcboard[y + dy][x + dx] === 0) {
+            console.log('rrrr');
+            newuser[y + dy][x + dx] = 20;
+            calcboard[y + dy][x + dx] = 20;
+            return remove_all(calcboard, newuser);
+          }
+          if (3 <= calcboard[y + dy][x + dx] && calcboard[y + dy][x + dx] <= 10) {
+            console.log(999);
+            newuser[y + dy][x + dx] = 20;
+            calcboard[y + dy][x + dx] = 20 + calcboard[y + dy][x + dx];
+            continue;
+          }
+        }
+      }
+    }
+  }
+  console.log(99);
+  console.log(calcboard);
+  return calcboard;
+};
 let timer = 4;
 export default function Home() {
   const [userinputs, setuserinputs] = useState([
@@ -120,6 +164,8 @@ export default function Home() {
   };
   const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
     event.preventDefault();
+    console.log(x, y);
+    console.log(50);
     const newboard = structuredClone(userinputs);
     if (newboard[y][x] <= 3) newboard[y][x] += 1;
     if (newboard[y][x] === 3) {
@@ -137,16 +183,17 @@ export default function Home() {
       }
     }, 1000);
   }
-
   const C = calc(bombmap, userinputs);
   console.log(C);
+  console.log(1);
+  const CC = remove_all(C, userinputs);
   console.log(100);
   console.log(bombmap);
   console.log(userinputs);
   return (
     <div className={styles.container}>
       <div className={styles.board}>
-        {C.map((row, y) =>
+        {CC.map((row, y) =>
           row.map((color, x) => (
             <button
               className={styles.cell}
@@ -163,11 +210,15 @@ export default function Home() {
                   backgroundPosition:
                     color === 20
                       ? 30 * 1
-                      : color === 100
-                        ? -300 * 1
-                        : color === 120
-                          ? -300 * 1
-                          : -900 * 1 + 30 * color,
+                      : color === 1
+                        ? -270 * 1
+                        : color === 2
+                          ? -240 * 1
+                          : color === 100
+                            ? -300 * 1
+                            : color === 120
+                              ? -300 * 1
+                              : -900 * 1 + 30 * color,
                 }}
               />
             </button>
