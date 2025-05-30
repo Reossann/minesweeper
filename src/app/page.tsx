@@ -2,35 +2,11 @@
 
 import { useState } from 'react';
 import styles from './page.module.css';
-const calcTotalPoint = (arr: number[], counter: number) => {
-  const sum = arr.reduce((p, c) => p + c);
-  return sum + counter;
+document.oncontextmenu = function () {
+  return false;
 };
-const sum1 = (n: number): number => {
-  if (n <= 0) {
-    return n;
-  } else {
-    return n + sum1(n - 1);
-  }
-};
-const sum2 = (n: number, n2: number): number => {
-  return n >= n2 ? n : n + sum2(n + 1, n2);
-};
-const sum3 = (n: number, n2: number): number => {
-  return ((n2 - n + 1) / 2) * (n + n2);
-};
-console.log(sum1(10));
-console.log(sum2(4, 10));
-console.log(sum3(4, 10));
-const down = (n: number) => {
-  if (n >= 0) {
-    down(n - 1);
-  }
-};
-down(10);
-
 export default function Home() {
-  const [board, setboard] = useState([
+  const [userinputs, setuserinputs] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -41,23 +17,56 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  const [samplePoints, setSamplePoints] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-  console.log(samplePoints);
-  const [sampleCounter, setSampleCounter] = useState(0);
-  console.log(sampleCounter);
-  const clickHandler = () => {
-    const newSamplePoints = structuredClone(samplePoints);
-    newSamplePoints[sampleCounter] += 1;
-    setSamplePoints(newSamplePoints);
-    setSampleCounter((sampleCounter + 1) % 14);
+
+  const [bombmap, setbombmap] = useState([
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
+
+  const clickHandler = (x: number, y: number) => {
+    const newboard = structuredClone(userinputs);
+    newboard[y][x] = 20;
+    setuserinputs(newboard);
   };
-  const TotalPoint = calcTotalPoint(samplePoints, sampleCounter);
-  console.log(TotalPoint);
+  const clickleftHandler = (x: number, y: number) => {
+    const newboard = structuredClone(userinputs);
+    if (newboard[y][x] <= 3) newboard[y][x] += 1;
+    if (newboard[y][x] === 3) {
+      newboard[y][x] = 0;
+    }
+    setuserinputs(newboard);
+  };
+
+  console.log(userinputs);
+
   return (
     <div className={styles.container}>
       <div className={styles.board}>
-        {board.map((row, y) =>
-          row.map((color, x) => <button className={styles.cell} key={`${x}-${y}`} />),
+        {userinputs.map((row, y) =>
+          row.map((color, x) => (
+            <button
+              className={styles.cell}
+              key={`${x}-${y}`}
+              onClick={() => clickHandler(x, y)}
+              onContextMenu={() => clickleftHandler(x, y)}
+              style={{
+                background: color === 20 ? '#c6c6c6' : '#4c545c',
+                border: color === 20 ? 'none' : '#707880 #222a32 #222a32 #707880',
+              }}
+            >
+              <div
+                className={styles.samplecell}
+                style={{ backgroundPosition: color === 0 ? 30 * 1 : -300 * 1 + 30 * color }}
+              />
+            </button>
+          )),
         )}
       </div>
     </div>
