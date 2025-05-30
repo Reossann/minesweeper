@@ -5,6 +5,29 @@ import styles from './page.module.css';
 document.oncontextmenu = function () {
   return false;
 };
+let bombcounts = 0;
+const bom = (b: number[][]) => {
+  const newbom = structuredClone(b);
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      if (bombcounts === 10 || newbom[y][x] === 100) {
+        break;
+      }
+      const ram = Math.floor(Math.random() * 10);
+      if (ram === 1) {
+        newbom[y][x] = 100;
+        bombcounts += 1;
+        console.log(bombcounts);
+      }
+    }
+  }
+  if (bombcounts !== 10) {
+    console.log(80);
+    return bom(newbom);
+  }
+  return newbom;
+};
+let first = 0;
 export default function Home() {
   const [userinputs, setuserinputs] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -43,7 +66,18 @@ export default function Home() {
     }
     setuserinputs(newboard);
   };
+  if (first === 0) {
+    first += 1;
+    setuserinputs(bom(bombmap));
+  }
+  type CountMap = Record<number, number>;
+  const flat = bombmap.flat();
+  const counts = flat.reduce<CountMap>((acc, curr) => {
+    acc[curr] = (acc[curr] || 0) + 1;
+    return acc;
+  }, {} as CountMap);
 
+  console.log(8);
   console.log(userinputs);
 
   return (
@@ -63,7 +97,10 @@ export default function Home() {
             >
               <div
                 className={styles.samplecell}
-                style={{ backgroundPosition: color === 0 ? 30 * 1 : -300 * 1 + 30 * color }}
+                style={{
+                  backgroundPosition:
+                    color === 0 ? 30 * 1 : color === 100 ? -300 * 1 : -300 * 1 + 30 * color,
+                }}
               />
             </button>
           )),
