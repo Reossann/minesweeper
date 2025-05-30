@@ -17,13 +17,13 @@ const bom = (b: number[][]) => {
   const newbom = structuredClone(b);
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
-      if (bombcounts === 10 || newbom[y][x] === 100) {
+      if (bombcounts === 10 || newbom[y][x] === 15) {
         break;
       }
       if (newbom[y][x] !== 20) {
         const ram = Math.floor(Math.random() * 20);
         if (ram === 1) {
-          newbom[y][x] = 100;
+          newbom[y][x] = 15;
           bombcounts += 1;
         }
       }
@@ -35,10 +35,10 @@ const bom = (b: number[][]) => {
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
       let bommmmmmm = 0;
-      if (newbom[y][x] !== 100) {
+      if (newbom[y][x] !== 15) {
         for (const [dy, dx] of directions) {
           if (newbom[y + dy] !== undefined) {
-            if (newbom[y + dy][x + dx] === 100) {
+            if (newbom[y + dy][x + dx] === 15) {
               bommmmmmm += 1;
             }
           }
@@ -74,7 +74,7 @@ const bomcalc = (bombmap: number[][], userinputs: number[][]) => {
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
       newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
-      if (newcalc[y][x] === 120) {
+      if (newcalc[y][x] === 35) {
         return 5000;
       }
     }
@@ -96,7 +96,7 @@ const remove_all = (calcboard: number[][], userinputs: number[][]) => {
           if (calcboard[y + dy] === undefined) {
             continue;
           }
-          if (calcboard[y + dy][x + dx] === 100) {
+          if (calcboard[y + dy][x + dx] === 15) {
             calcboard[y][x] = calcboard[y][x] + 20;
             break;
           }
