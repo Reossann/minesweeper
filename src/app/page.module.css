@@ -11,8 +11,8 @@
 .board {
   display: flex;
   flex-wrap: wrap;
-  width: 360px;
-  height: 360px;
+  width: 270px;
+  height: 270px;
 }
 
 .cell {
@@ -20,11 +20,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background-color: #4c545c;
+  width: 30px;
+  height: 30px;
+  background-color: #c6c6c6;
   border: 5px solid;
-  border-color: #707880 #222a32 #222a32 #707880;
+  border-color: #fff #808080 #808080 #fff;
 }
 
 .samplecell {

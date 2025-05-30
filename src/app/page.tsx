@@ -53,6 +53,30 @@ const bom = (b: number[][]) => {
   }
   return newbom;
 };
+
+const calc = (bombmap: number[][], userinputs: number[][]) => {
+  const newcalc = structuredClone(bombmap);
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
+    }
+  }
+  return newcalc;
+};
+
+const bomcalc = (bombmap: number[][], userinputs: number[][]) => {
+  const newcalc = structuredClone(bombmap);
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
+      if (newcalc[y][x] === 120) {
+        return 5000;
+      }
+    }
+  }
+};
+
+let timer = 4;
 export default function Home() {
   const [userinputs, setuserinputs] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -78,21 +102,20 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
   type CountMap = Record<number, number>;
-  const flat = userinputs.flat();
+  const flat = bombmap.flat();
   const counts = flat.reduce<CountMap>((acc, curr) => {
     acc[curr] = (acc[curr] || 0) + 1;
     return acc;
   }, {} as CountMap);
-  console.log(counts[0]);
-  console.log(8);
-  console.log(userinputs);
 
   const clickHandler = (x: number, y: number) => {
     const newboard = structuredClone(userinputs);
-    newboard[y][x] = 20;
+    if (newboard[y][x] !== 1 && newboard[y][x] !== 2) {
+      newboard[y][x] = 20;
+    }
     setuserinputs(newboard);
     if (counts[0] === 81) {
-      setuserinputs(bom(newboard));
+      setbombmap(bom(newboard));
     }
   };
   const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
@@ -104,11 +127,26 @@ export default function Home() {
     }
     setuserinputs(newboard);
   };
+
+  const boooom = bomcalc(bombmap, userinputs);
+  if (boooom === 5000) {
+    setInterval(() => {
+      timer -= 1;
+      if (timer === 0) {
+        location.reload();
+      }
+    }, 1000);
+  }
+
+  const C = calc(bombmap, userinputs);
+  console.log(C);
+  console.log(100);
+  console.log(bombmap);
   console.log(userinputs);
   return (
     <div className={styles.container}>
       <div className={styles.board}>
-        {userinputs.map((row, y) =>
+        {C.map((row, y) =>
           row.map((color, x) => (
             <button
               className={styles.cell}
@@ -116,15 +154,20 @@ export default function Home() {
               onClick={() => clickHandler(x, y)}
               onContextMenu={(event) => clickrightHandler(x, y, event)}
               style={{
-                background: color === 20 ? '#c6c6c6' : '#4c545c',
-                border: color === 20 ? 'none' : '#707880 #222a32 #222a32 #707880',
+                border: color >= 20 ? '1px solid #808080' : '#fff #808080 #808080 #fff',
               }}
             >
               <div
                 className={styles.samplecell}
                 style={{
                   backgroundPosition:
-                    color === 0 ? 30 * 1 : color === 100 ? -300 * 1 : -300 * 1 + 30 * color,
+                    color === 20
+                      ? 30 * 1
+                      : color === 100
+                        ? -300 * 1
+                        : color === 120
+                          ? -300 * 1
+                          : -900 * 1 + 30 * color,
                 }}
               />
             </button>
