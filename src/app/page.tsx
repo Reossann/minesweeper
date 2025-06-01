@@ -192,38 +192,44 @@ export default function Home() {
   console.log(userinputs);
   return (
     <div className={styles.container}>
-      <div className={styles.board}>
-        {CC.map((row, y) =>
-          row.map((color, x) => (
-            <button
-              className={styles.cell}
-              key={`${x}-${y}`}
-              onClick={() => clickHandler(x, y)}
-              onContextMenu={(event) => clickrightHandler(x, y, event)}
-              style={{
-                border: color >= 20 ? '1px solid #808080' : '#fff #808080 #808080 #fff',
-              }}
-            >
-              <div
-                className={styles.samplecell}
-                style={{
-                  backgroundPosition:
-                    color === 20
-                      ? 30 * 1
-                      : color === 1
-                        ? -270 * 1
-                        : color === 2
-                          ? -240 * 1
-                          : color === 100
-                            ? -300 * 1
-                            : color === 120
-                              ? -300 * 1
-                              : -900 * 1 + 30 * color,
-                }}
-              />
-            </button>
-          )),
-        )}
+      <div className={styles.boardP}>
+        <div className={styles.boardP2}>
+          <div className={styles.boardP3}>
+            <div className={styles.board}>
+              {CC.map((row, y) =>
+                row.map((color, x) => (
+                  <button
+                    className={styles.cell}
+                    key={`${x}-${y}`}
+                    onClick={() => clickHandler(x, y)}
+                    onContextMenu={(event) => clickrightHandler(x, y, event)}
+                    style={{
+                      border: color >= 20 ? '1px solid #808080' : '#fff #808080 #808080 #fff',
+                    }}
+                  >
+                    <div
+                      className={styles.samplecell}
+                      style={{
+                        backgroundPosition:
+                          color === 20
+                            ? 30 * 1
+                            : color === 1
+                              ? -270 * 1
+                              : color === 2
+                                ? -240 * 1
+                                : color === 100
+                                  ? -300 * 1
+                                  : color === 120
+                                    ? -300 * 1
+                                    : -900 * 1 + 30 * color,
+                      }}
+                    />
+                  </button>
+                )),
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
