@@ -145,6 +145,9 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+  // useEffect(() => {
+  //   const timer;
+  // });
   type CountMap = Record<number, number>;
   const flat = bombmap.flat();
   const counts = flat.reduce<CountMap>((acc, curr) => {
