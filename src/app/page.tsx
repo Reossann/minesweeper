@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
 const directions = [
   [1, 0],
@@ -145,15 +145,22 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  // useEffect(() => {
-  //   const timer;
-  // });
+  let uptimer = 0;
+  const countup = () => {
+    uptimer += 1;
+    console.log(uptimer);
+  };
+
   type CountMap = Record<number, number>;
   const flat = bombmap.flat();
   const counts = flat.reduce<CountMap>((acc, curr) => {
     acc[curr] = (acc[curr] || 0) + 1;
     return acc;
   }, {} as CountMap);
+
+  useEffect(() => {
+    setInterval(countup, 1000), [];
+  });
 
   const clickHandler = (x: number, y: number) => {
     const newboard = structuredClone(userinputs);
