@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './page.module.css';
 const directions = [
   [1, 0],
@@ -86,9 +86,7 @@ const remove_all = (calcboard: number[][], userinputs: number[][]) => {
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
       if (newuser[y][x] === 20) {
-        console.log(x, y);
         if (23 <= calcboard[y][x] && calcboard[y][x] <= 30) {
-          console.log(444);
           continue;
         }
 
@@ -101,13 +99,11 @@ const remove_all = (calcboard: number[][], userinputs: number[][]) => {
             break;
           }
           if (calcboard[y + dy][x + dx] === 0) {
-            console.log('rrrr');
             newuser[y + dy][x + dx] = 20;
             calcboard[y + dy][x + dx] = 20;
             return remove_all(calcboard, newuser);
           }
           if (3 <= calcboard[y + dy][x + dx] && calcboard[y + dy][x + dx] <= 10) {
-            console.log(999);
             newuser[y + dy][x + dx] = 20;
             calcboard[y + dy][x + dx] = 20 + calcboard[y + dy][x + dx];
             continue;
@@ -116,8 +112,6 @@ const remove_all = (calcboard: number[][], userinputs: number[][]) => {
       }
     }
   }
-  console.log(99);
-  console.log(calcboard);
   return calcboard;
 };
 let timer = 4;
@@ -187,11 +181,18 @@ export default function Home() {
   const C = calc(bombmap, userinputs);
   const CC = remove_all(C, userinputs);
   const [uptimer, setuptimer] = useState(0);
+  const flag = useRef(true);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setuptimer((uptimer) => uptimer + 1);
-    }, 1000);
-  }, []);
+    {
+      if (flag.current) {
+        flag.current = false;
+        return;
+      }
+      const interval = setInterval(() => {
+        setuptimer((uptimer) => uptimer + 1);
+      }, 1000);
+    }
+  }, [bombmap]);
   console.log(uptimer);
   return (
     <div className={styles.container}>
