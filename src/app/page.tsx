@@ -145,11 +145,6 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  let uptimer = 0;
-  const countup = () => {
-    uptimer += 1;
-    console.log(uptimer);
-  };
 
   type CountMap = Record<number, number>;
   const flat = bombmap.flat();
@@ -157,10 +152,6 @@ export default function Home() {
     acc[curr] = (acc[curr] || 0) + 1;
     return acc;
   }, {} as CountMap);
-
-  useEffect(() => {
-    setInterval(countup, 1000), [];
-  });
 
   const clickHandler = (x: number, y: number) => {
     const newboard = structuredClone(userinputs);
@@ -194,12 +185,14 @@ export default function Home() {
     }, 1000);
   }
   const C = calc(bombmap, userinputs);
-  console.log(C);
-  console.log(1);
   const CC = remove_all(C, userinputs);
-  console.log(100);
-  console.log(bombmap);
-  console.log(userinputs);
+  const [uptimer, setuptimer] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setuptimer((uptimer) => uptimer + 1);
+    }, 1000);
+  }, []);
+  console.log(uptimer);
   return (
     <div className={styles.container}>
       <div className={styles.boardP}>
