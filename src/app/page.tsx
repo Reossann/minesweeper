@@ -12,12 +12,14 @@ const directions = [
   [0, 1],
   [1, 1],
 ];
-let bombcounts = 0;
-const bom = (b: number[][], w: number, h: number, Sumbom: number) => {
+
+const bom = (b: number[][], w: number, h: number, Sumbom: number, bombcounts: number) => {
+  let croneboms = bombcounts;
+  console.log(8080);
   const newbom = structuredClone(b);
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      if (bombcounts === Sumbom) {
+      if (croneboms === Sumbom) {
         break;
       }
       if (newbom[y][x] !== 20) {
@@ -25,14 +27,14 @@ const bom = (b: number[][], w: number, h: number, Sumbom: number) => {
         if (ram === 1) {
           if (newbom[y][x] !== 15) {
             newbom[y][x] = 15;
-            bombcounts += 1;
+            croneboms += 1;
           }
         }
       }
     }
   }
   if (bombcounts !== Sumbom) {
-    return bom(newbom, w, h, Sumbom);
+    return bom(newbom, w, h, Sumbom, croneboms);
   }
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -58,6 +60,9 @@ const calc = (bombmap: number[][], userinputs: number[][], w: number, h: number)
   const newcalc = structuredClone(bombmap);
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
+      if (userinputs[y][x] === bombmap[y][x]) {
+        continue;
+      }
       if (userinputs[y][x] === 1 || userinputs[y][x] === 2) {
         newcalc[y][x] = userinputs[y][x];
         continue;
@@ -171,7 +176,6 @@ export default function Home() {
   };
   //初級
   const sizechange0 = () => {
-    console.log(800);
     const newboard = [];
     for (let i = 0; i < 9; i++) {
       const row = [];
@@ -181,6 +185,7 @@ export default function Home() {
       newboard.push(row);
     }
     flag.current = true;
+    setuptimer(0);
     setbombom(10);
     setdekasa([9, 9]);
     setuserinputs(newboard);
@@ -188,7 +193,6 @@ export default function Home() {
   };
   //中級
   const sizechange1 = () => {
-    console.log(800);
     const newboard = [];
     for (let i = 0; i < 16; i++) {
       const row = [];
@@ -198,6 +202,7 @@ export default function Home() {
       newboard.push(row);
     }
     flag.current = true;
+    setuptimer(0);
     setbombom(40);
     setdekasa([16, 16]);
     setuserinputs(newboard);
@@ -205,7 +210,6 @@ export default function Home() {
   };
   //上級
   const sizechange2 = () => {
-    console.log(800);
     const newboard = [];
     for (let i = 0; i < 16; i++) {
       const row = [];
@@ -215,6 +219,7 @@ export default function Home() {
       newboard.push(row);
     }
     flag.current = true;
+    setuptimer(0);
     setbombom(99);
     setdekasa([30, 16]);
     setuserinputs(newboard);
@@ -222,7 +227,6 @@ export default function Home() {
   };
   //カスタム
   const sizechange3 = () => {
-    console.log(800);
     const newboard = [];
     for (let i = 0; i < 2; i++) {
       const row = [];
@@ -232,6 +236,7 @@ export default function Home() {
       newboard.push(row);
     }
     flag.current = true;
+    setuptimer(0);
     setbombom(1);
     setdekasa([2, 2]);
     setuserinputs(newboard);
@@ -286,20 +291,6 @@ export default function Home() {
     setbombmap(newboard);
   };
 
-  const customsize = (event: React.FormEvent<HTMLFormElement>) => {
-    const newboard = [];
-    for (let i = 0; i < dekasa[0]; i++) {
-      const row = [];
-      for (let j = 0; j < dekasa[1]; j++) {
-        row.push(0);
-      }
-      newboard.push(row);
-    }
-    flag.current = true;
-    setuserinputs(newboard);
-    setbombmap(newboard);
-  };
-
   const clickHandler = (x: number, y: number) => {
     const newboard = structuredClone(userinputs);
     if (newboard[y][x] !== 1 && newboard[y][x] !== 2) {
@@ -307,7 +298,8 @@ export default function Home() {
     }
     setuserinputs(newboard);
     if (counts[0] === dekasa[0] * dekasa[1]) {
-      setbombmap(bom(newboard, dekasa[0], dekasa[1], bombom));
+      const boms = 0;
+      setbombmap(bom(newboard, dekasa[0], dekasa[1], bombom, boms));
     }
   };
   const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
@@ -333,7 +325,6 @@ export default function Home() {
   }
   const C = calc(bombmap, userinputs, dekasa[0], dekasa[1]);
   const CC = remove_all(C, userinputs, dekasa[0], dekasa[1]);
-  console.log(userinputs);
   const [uptimer, setuptimer] = useState(0);
   const flag = useRef(true);
   useEffect(() => {
@@ -342,13 +333,43 @@ export default function Home() {
         flag.current = false;
         return;
       }
-      setInterval(() => {
+      const Interbal = setInterval(() => {
         setuptimer((uptimer) => uptimer + 1);
       }, 1000);
+      return () => clearInterval(Interbal);
     }
   }, [bombmap]);
-  console.log(uptimer);
-  console.log(bombmap);
+  const restart = () => {
+    setbombmap([
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]);
+    setdekasa([9, 9]);
+    setbombom(10);
+    setuptimer(0);
+    setselect('');
+    setuserinputs([
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]);
+    flag.current = true;
+    return;
+  };
+  console.log(counts[0]);
   return (
     <div className={styles.container}>
       <div className={styles.boardP}>
@@ -393,6 +414,7 @@ export default function Home() {
                 <button>更新</button>
               </form>
             )}
+            <div onClick={restart}>リスタート</div>
 
             <div className={styles.board} style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}>
               {CC.map((row, y) =>
@@ -403,7 +425,11 @@ export default function Home() {
                     onClick={() => clickHandler(x, y)}
                     onContextMenu={(event) => clickrightHandler(x, y, event)}
                     style={{
-                      border: color >= 20 ? '1px solid #808080' : '#fff #808080 #808080 #fff',
+                      border: color >= 20 ? '1px solid' : '5px solid',
+                      borderTopColor: color >= 20 ? '#ffffff' : '#fff',
+                      borderLeftColor: color >= 20 ? '#ffffff' : '#808080',
+                      borderBottomColor: color >= 20 ? '#ffffff' : '#808080',
+                      borderRightColor: color >= 20 ? '#ffffff' : '#fff',
                     }}
                   >
                     <div
