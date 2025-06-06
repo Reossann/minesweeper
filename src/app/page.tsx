@@ -13,27 +13,29 @@ const directions = [
   [1, 1],
 ];
 let bombcounts = 0;
-const bom = (b: number[][], Deka: number, Sumbom: number) => {
+const bom = (b: number[][], w: number, h: number, Sumbom: number) => {
   const newbom = structuredClone(b);
-  for (let y = 0; y < Deka; y++) {
-    for (let x = 0; x < Deka; x++) {
-      if (bombcounts === Sumbom || newbom[y][x] === 15) {
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (bombcounts === Sumbom) {
         break;
       }
       if (newbom[y][x] !== 20) {
         const ram = Math.floor(Math.random() * 20);
         if (ram === 1) {
-          newbom[y][x] = 15;
-          bombcounts += 1;
+          if (newbom[y][x] !== 15) {
+            newbom[y][x] = 15;
+            bombcounts += 1;
+          }
         }
       }
     }
   }
   if (bombcounts !== Sumbom) {
-    return bom(newbom, Deka, Sumbom);
+    return bom(newbom, w, h, Sumbom);
   }
-  for (let y = 0; y < Deka; y++) {
-    for (let x = 0; x < Deka; x++) {
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
       let bommmmmmm = 0;
       if (newbom[y][x] !== 15) {
         for (const [dy, dx] of directions) {
@@ -52,10 +54,10 @@ const bom = (b: number[][], Deka: number, Sumbom: number) => {
   return newbom;
 };
 
-const calc = (bombmap: number[][], userinputs: number[][], Deka: number) => {
+const calc = (bombmap: number[][], userinputs: number[][], w: number, h: number) => {
   const newcalc = structuredClone(bombmap);
-  for (let y = 0; y < Deka; y++) {
-    for (let x = 0; x < Deka; x++) {
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
       if (userinputs[y][x] === 1 || userinputs[y][x] === 2) {
         newcalc[y][x] = userinputs[y][x];
         continue;
@@ -69,10 +71,10 @@ const calc = (bombmap: number[][], userinputs: number[][], Deka: number) => {
   return newcalc;
 };
 
-const bomcalc = (bombmap: number[][], userinputs: number[][], Deka: number) => {
+const bomcalc = (bombmap: number[][], userinputs: number[][], w: number, h: number) => {
   const newcalc = structuredClone(bombmap);
-  for (let y = 0; y < Deka; y++) {
-    for (let x = 0; x < Deka; x++) {
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
       newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
       if (newcalc[y][x] === 35) {
         return 5000;
@@ -81,10 +83,10 @@ const bomcalc = (bombmap: number[][], userinputs: number[][], Deka: number) => {
   }
 };
 
-const remove_all = (calcboard: number[][], userinputs: number[][], Deka: number) => {
+const remove_all = (calcboard: number[][], userinputs: number[][], w: number, h: number) => {
   const newuser = structuredClone(userinputs);
-  for (let y = 0; y < Deka; y++) {
-    for (let x = 0; x < Deka; x++) {
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
       if (newuser[y][x] === 20) {
         if (23 <= calcboard[y][x] && calcboard[y][x] <= 30) {
           continue;
@@ -101,7 +103,7 @@ const remove_all = (calcboard: number[][], userinputs: number[][], Deka: number)
           if (calcboard[y + dy][x + dx] === 0) {
             newuser[y + dy][x + dx] = 20;
             calcboard[y + dy][x + dx] = 20;
-            return remove_all(calcboard, newuser, Deka);
+            return remove_all(calcboard, newuser, w, h);
           }
           if (3 <= calcboard[y + dy][x + dx] && calcboard[y + dy][x + dx] <= 10) {
             newuser[y + dy][x + dx] = 20;
@@ -118,11 +120,9 @@ const remove_all = (calcboard: number[][], userinputs: number[][], Deka: number)
 let timer = 4;
 
 export default function Home() {
-  const [boardsize, setboardsize] = useState(0);
-
   const [select, setselect] = useState('');
 
-  const [dekasa, setdekasa] = useState(9);
+  const [dekasa, setdekasa] = useState([9, 9]);
 
   const [bombom, setbombom] = useState(10);
 
@@ -159,8 +159,17 @@ export default function Home() {
   const f_sele = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setselect(value);
+    if (value === '1') {
+      sizechange0();
+    } else if (value === '2') {
+      sizechange1();
+    } else if (value === '3') {
+      sizechange2();
+    } else if (value === '4') {
+      sizechange3();
+    }
   };
-  //サイズ変更
+  //初級
   const sizechange0 = () => {
     console.log(800);
     const newboard = [];
@@ -173,12 +182,11 @@ export default function Home() {
     }
     flag.current = true;
     setbombom(10);
-    setdekasa(9);
-    setboardsize(0);
+    setdekasa([9, 9]);
     setuserinputs(newboard);
     setbombmap(newboard);
   };
-
+  //中級
   const sizechange1 = () => {
     console.log(800);
     const newboard = [];
@@ -191,8 +199,103 @@ export default function Home() {
     }
     flag.current = true;
     setbombom(40);
-    setdekasa(16);
-    setboardsize(230);
+    setdekasa([16, 16]);
+    setuserinputs(newboard);
+    setbombmap(newboard);
+  };
+  //上級
+  const sizechange2 = () => {
+    console.log(800);
+    const newboard = [];
+    for (let i = 0; i < 16; i++) {
+      const row = [];
+      for (let j = 0; j < 30; j++) {
+        row.push(0);
+      }
+      newboard.push(row);
+    }
+    flag.current = true;
+    setbombom(99);
+    setdekasa([30, 16]);
+    setuserinputs(newboard);
+    setbombmap(newboard);
+  };
+  //カスタム
+  const sizechange3 = () => {
+    console.log(800);
+    const newboard = [];
+    for (let i = 0; i < 2; i++) {
+      const row = [];
+      for (let j = 0; j < 2; j++) {
+        row.push(0);
+      }
+      newboard.push(row);
+    }
+    flag.current = true;
+    setbombom(1);
+    setdekasa([2, 2]);
+    setuserinputs(newboard);
+    setbombmap(newboard);
+  };
+
+  const Wchange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newboard = [];
+    for (let i = 0; i < dekasa[1]; i++) {
+      const row = [];
+      for (let j = 0; j < Number(event.target.value); j++) {
+        row.push(0);
+      }
+      newboard.push(row);
+    }
+    flag.current = true;
+    setbombom(1);
+    setdekasa([Number(event.target.value), dekasa[1]]);
+    setuserinputs(newboard);
+    setbombmap(newboard);
+  };
+
+  const Hchange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newboard = [];
+    for (let i = 0; i < Number(event.target.value); i++) {
+      const row = [];
+      for (let j = 0; j < dekasa[0]; j++) {
+        row.push(0);
+      }
+      newboard.push(row);
+    }
+    flag.current = true;
+    setbombom(1);
+    setdekasa([dekasa[0], Number(event.target.value)]);
+    setuserinputs(newboard);
+    setbombmap(newboard);
+  };
+
+  const Bchange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newboard = [];
+    for (let i = 0; i < dekasa[0]; i++) {
+      const row = [];
+      for (let j = 0; j < dekasa[1]; j++) {
+        row.push(0);
+      }
+      newboard.push(row);
+    }
+    flag.current = true;
+    setbombom(Number(event.target.value));
+    setdekasa([dekasa[0], dekasa[1]]);
+    setuserinputs(newboard);
+    setbombmap(newboard);
+  };
+
+  const customsize = (event: React.FormEvent<HTMLFormElement>) => {
+    const newboard = [];
+    for (let i = 0; i < dekasa[0]; i++) {
+      const row = [];
+      for (let j = 0; j < dekasa[1]; j++) {
+        row.push(0);
+      }
+      newboard.push(row);
+    }
+    flag.current = true;
     setuserinputs(newboard);
     setbombmap(newboard);
   };
@@ -203,8 +306,8 @@ export default function Home() {
       newboard[y][x] = 20;
     }
     setuserinputs(newboard);
-    if (counts[0] === dekasa ** 2) {
-      setbombmap(bom(newboard, dekasa, bombom));
+    if (counts[0] === dekasa[0] * dekasa[1]) {
+      setbombmap(bom(newboard, dekasa[0], dekasa[1], bombom));
     }
   };
   const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
@@ -219,7 +322,7 @@ export default function Home() {
     setuserinputs(newboard);
   };
 
-  const boooom = bomcalc(bombmap, userinputs, dekasa);
+  const boooom = bomcalc(bombmap, userinputs, dekasa[0], dekasa[1]);
   if (boooom === 5000) {
     setInterval(() => {
       timer -= 1;
@@ -228,8 +331,8 @@ export default function Home() {
       }
     }, 1000);
   }
-  const C = calc(bombmap, userinputs, dekasa);
-  const CC = remove_all(C, userinputs, dekasa);
+  const C = calc(bombmap, userinputs, dekasa[0], dekasa[1]);
+  const CC = remove_all(C, userinputs, dekasa[0], dekasa[1]);
   console.log(userinputs);
   const [uptimer, setuptimer] = useState(0);
   const flag = useRef(true);
@@ -252,14 +355,46 @@ export default function Home() {
         <div className={styles.boardP2}>
           <div className={styles.boardP3}>
             {uptimer}
-            <select onChange={sizechange1}>
-              <option value={1}>1</option>
-              <option>2</option>
+            <select value={select} onChange={f_sele}>
+              <option value={1}>初級</option>
+              <option value={2}>中級</option>
+              <option value={3}>上級</option>
+              <option value={4}>カスタム</option>
             </select>
-            <div
-              className={styles.board}
-              style={{ width: 270 + boardsize, height: 270 + boardsize }}
-            >
+            {select === '4' && (
+              <form>
+                <label htmlFor="W">幅：</label>
+                <input
+                  className={styles.input}
+                  id="W"
+                  type="text"
+                  value={dekasa[0]}
+                  name="W"
+                  onChange={Wchange}
+                />
+                <label htmlFor="H">高さ：</label>
+                <input
+                  className={styles.input}
+                  id="H"
+                  type="text"
+                  value={dekasa[1]}
+                  name="H"
+                  onChange={Hchange}
+                />
+                <label htmlFor="B">爆弾数：</label>
+                <input
+                  className={styles.input}
+                  id="B"
+                  type="text"
+                  value={bombom}
+                  name="B"
+                  onChange={Bchange}
+                />
+                <button>更新</button>
+              </form>
+            )}
+
+            <div className={styles.board} style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}>
               {CC.map((row, y) =>
                 row.map((color, x) => (
                   <button
