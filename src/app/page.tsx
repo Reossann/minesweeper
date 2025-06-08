@@ -222,7 +222,7 @@ const remove_all = (calcboard: number[][], userinputs: number[][], w: number, h:
   return calcboard;
 };
 
-let timer = 4;
+const timer = 4;
 
 export default function Home() {
   const [select, setselect] = useState('');
@@ -371,6 +371,7 @@ export default function Home() {
       newboard[y][x] = 20;
     }
     setuserinputs(newboard);
+
     if (counts[0] === dekasa[0] * dekasa[1]) {
       const boms = 0;
       setbombmap(bom(newboard, dekasa[0], dekasa[1], bombom, boms));
@@ -390,13 +391,15 @@ export default function Home() {
 
   const boooom = bomcalc(bombmap, userinputs, dekasa[0], dekasa[1]);
   if (boooom === 5000) {
-    setInterval(() => {
-      timer -= 1;
-      if (timer === 0) {
-        location.reload();
+    for (let y = 0; y < dekasa[0]; y++) {
+      for (let x = 0; x < dekasa[1]; x++) {
+        if (bombmap[y][x] === 15) {
+          userinputs[y][x] = 20;
+        }
       }
-    }, 1000);
+    }
   }
+
   const [uptimer, setuptimer] = useState(0);
   const flag = useRef(true);
   useEffect(() => {
@@ -491,15 +494,18 @@ export default function Home() {
                         backgroundPosition:
                           color === 20
                             ? 30 * 1
-                            : color === 1
-                              ? -270 * 1
-                              : color === 2
-                                ? -240 * 1
-                                : color === 100
-                                  ? -300 * 1
-                                  : color === 120
+                            : //爆弾
+                              color === 35
+                              ? -300
+                              : color === 1
+                                ? -270 * 1
+                                : color === 2
+                                  ? -240 * 1
+                                  : color === 100
                                     ? -300 * 1
-                                    : -900 * 1 + 30 * color,
+                                    : color === 120
+                                      ? -300 * 1
+                                      : -900 * 1 + 30 * color,
                       }}
                     />
                   </button>
