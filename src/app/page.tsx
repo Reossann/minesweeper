@@ -154,9 +154,16 @@ const bomcalc = (bombmap: number[][], userinputs: number[][], w: number, h: numb
       }
     }
   }
+  return 0;
 };
 
-const remove_all = (calcboard: number[][], userinputs: number[][], w: number, h: number) => {
+const remove_all = (
+  calcboard: number[][],
+  userinputs: number[][],
+  w: number,
+  h: number,
+  trigger: number,
+) => {
   const newuser = structuredClone(userinputs);
   if (h > w) {
     for (let y = 0; y < w; y++) {
@@ -177,8 +184,9 @@ const remove_all = (calcboard: number[][], userinputs: number[][], w: number, h:
             if (calcboard[x + dx][y + dy] === 0) {
               newuser[x + dx][y + dy] = 20;
               calcboard[x + dx][y + dy] = 20;
-              return remove_all(calcboard, newuser, w, h);
+              return remove_all(calcboard, newuser, w, h, trigger);
             }
+
             if (3 <= calcboard[x + dx][y + dy] && calcboard[x + dx][y + dy] <= 10) {
               newuser[x + dx][y + dy] = 20;
               calcboard[x + dx][y + dy] = 20 + calcboard[x + dx][y + dy];
@@ -207,8 +215,9 @@ const remove_all = (calcboard: number[][], userinputs: number[][], w: number, h:
             if (calcboard[y + dy][x + dx] === 0) {
               newuser[y + dy][x + dx] = 20;
               calcboard[y + dy][x + dx] = 20;
-              return remove_all(calcboard, newuser, w, h);
+              return remove_all(calcboard, newuser, w, h, trigger);
             }
+
             if (3 <= calcboard[y + dy][x + dx] && calcboard[y + dy][x + dx] <= 10) {
               newuser[y + dy][x + dx] = 20;
               calcboard[y + dy][x + dx] = 20 + calcboard[y + dy][x + dx];
@@ -218,11 +227,18 @@ const remove_all = (calcboard: number[][], userinputs: number[][], w: number, h:
         }
       }
     }
+  } //ここに新しい関数もどきをつくる
+  if (trigger === 5000) {
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (calcboard[y][x] === 15) {
+          calcboard[y][x] = 35;
+        }
+      }
+    }
   }
   return calcboard;
 };
-
-const timer = 4;
 
 export default function Home() {
   const [select, setselect] = useState('');
@@ -366,6 +382,9 @@ export default function Home() {
   };
 
   const clickHandler = (x: number, y: number) => {
+    if (boooom === 5000) {
+      return;
+    }
     const newboard = structuredClone(userinputs);
     if (newboard[y][x] !== 1 && newboard[y][x] !== 2) {
       newboard[y][x] = 20;
@@ -378,6 +397,9 @@ export default function Home() {
     }
   };
   const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
+    if (boooom === 5000) {
+      return;
+    }
     event.preventDefault();
     console.log(x, y);
     console.log(50);
@@ -390,15 +412,6 @@ export default function Home() {
   };
 
   const boooom = bomcalc(bombmap, userinputs, dekasa[0], dekasa[1]);
-  if (boooom === 5000) {
-    for (let y = 0; y < dekasa[0]; y++) {
-      for (let x = 0; x < dekasa[1]; x++) {
-        if (bombmap[y][x] === 15) {
-          userinputs[y][x] = 20;
-        }
-      }
-    }
-  }
 
   const [uptimer, setuptimer] = useState(0);
   const flag = useRef(true);
@@ -445,7 +458,7 @@ export default function Home() {
     return;
   };
   const C = calc(bombmap, userinputs, dekasa[0], dekasa[1]);
-  const CC = remove_all(C, userinputs, dekasa[0], dekasa[1]);
+  const CC = remove_all(C, userinputs, dekasa[0], dekasa[1], boooom);
   console.log(CC);
   return (
     <div className={styles.container}>
