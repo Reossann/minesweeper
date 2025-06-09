@@ -8,7 +8,7 @@
   padding: 0 0.5rem;
 }
 
-.boardP {
+/* .boardP {
   display: flex;
   flex-flow: column wrap;
   align-items: center;
@@ -38,7 +38,7 @@
   width: 362px;
   height: 362px;
   border: 20px solid blue;
-}
+} */
 
 .board {
   display: flex;
@@ -52,7 +52,6 @@
   justify-content: center;
   width: 30px;
   height: 30px;
-  background-color: #c6c6c6;
   border: 5px solid;
   border-color: #fff #808080 #808080 #fff;
 }

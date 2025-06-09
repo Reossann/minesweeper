@@ -15,7 +15,6 @@ const directions = [
 
 const bom = (b: number[][], w: number, h: number, Sumbom: number, bombcounts: number) => {
   let croneboms = bombcounts;
-  console.log(8080);
   const newbom = structuredClone(b);
   if (h > w) {
     for (let y = 0; y < h; y++) {
@@ -110,7 +109,13 @@ const calc = (bombmap: number[][], userinputs: number[][], w: number, h: number)
         if (newcalc[x][y] === userinputs[x][y]) {
           continue;
         }
+        if (newcalc[x][y] === 55) {
+          continue;
+        }
         newcalc[x][y] = bombmap[x][y] + userinputs[x][y];
+        if (newcalc[x][y] === 35) {
+          newcalc[x][y] = 70;
+        }
       }
     }
   } else {
@@ -126,7 +131,13 @@ const calc = (bombmap: number[][], userinputs: number[][], w: number, h: number)
         if (newcalc[y][x] === userinputs[y][x]) {
           continue;
         }
+        if (newcalc[y][x] === 55) {
+          continue;
+        }
         newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
+        if (newcalc[y][x] === 35) {
+          newcalc[y][x] = 70;
+        }
       }
     }
   }
@@ -165,10 +176,15 @@ const remove_all = (
   trigger: number,
 ) => {
   const newuser = structuredClone(userinputs);
+  const anocalcboard = structuredClone(calcboard);
   if (h > w) {
     for (let y = 0; y < w; y++) {
       for (let x = 0; x < h; x++) {
         if (newuser[x][y] === 20) {
+          if (calcboard[x][y] >= 35) {
+            console.log(555);
+            continue;
+          }
           if (23 <= calcboard[x][y] && calcboard[x][y] <= 30) {
             continue;
           }
@@ -200,6 +216,10 @@ const remove_all = (
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         if (newuser[y][x] === 20) {
+          if (anocalcboard[y][x] >= 35) {
+            console.log(555);
+            continue;
+          }
           if (23 <= calcboard[y][x] && calcboard[y][x] <= 30) {
             continue;
           }
@@ -209,16 +229,19 @@ const remove_all = (
               continue;
             }
             if (calcboard[y + dy][x + dx] === 15) {
+              console.log(8);
               calcboard[y][x] = calcboard[y][x] + 20;
               break;
             }
             if (calcboard[y + dy][x + dx] === 0) {
+              console.log(9);
               newuser[y + dy][x + dx] = 20;
               calcboard[y + dy][x + dx] = 20;
               return remove_all(calcboard, newuser, w, h, trigger);
             }
 
             if (3 <= calcboard[y + dy][x + dx] && calcboard[y + dy][x + dx] <= 10) {
+              console.log(10);
               newuser[y + dy][x + dx] = 20;
               calcboard[y + dy][x + dx] = 20 + calcboard[y + dy][x + dx];
               continue;
@@ -412,19 +435,28 @@ export default function Home() {
   };
 
   const boooom = bomcalc(bombmap, userinputs, dekasa[0], dekasa[1]);
+  // if (boooom === 5000) {
+  //   for (let y = 0; y < dekasa[0]; y++) {
+  //     for (let x = 0; x < dekasa[1]; x++) {
+  //       if (bombmap[y][x] === 15) {
+  //         userinputs;
+  //       }
+  //     }
+  //   }
+  // }
 
   const [uptimer, setuptimer] = useState(0);
   const flag = useRef(true);
   useEffect(() => {
     {
-      if (flag.current) {
-        flag.current = false;
-        return;
-      }
-      const Interbal = setInterval(() => {
-        setuptimer((uptimer) => uptimer + 1);
-      }, 1000);
-      return () => clearInterval(Interbal);
+      // if (flag.current) {
+      //   flag.current = false;
+      //   return;
+      // }
+      // const Interbal = setInterval(() => {
+      //   setuptimer((uptimer) => uptimer + 1);
+      // }, 1000);
+      // return () => clearInterval(Interbal);
     }
   }, [bombmap]);
   const restart = () => {
@@ -458,8 +490,11 @@ export default function Home() {
     return;
   };
   const C = calc(bombmap, userinputs, dekasa[0], dekasa[1]);
+  console.log(C);
+  console.log(9999);
   const CC = remove_all(C, userinputs, dekasa[0], dekasa[1], boooom);
   console.log(CC);
+  console.log(10000);
   return (
     <div className={styles.container}>
       <div className={styles.boardP}>
@@ -499,6 +534,7 @@ export default function Home() {
                       borderLeftColor: color >= 20 ? '#ffffff' : '#808080',
                       borderBottomColor: color >= 20 ? '#ffffff' : '#808080',
                       borderRightColor: color >= 20 ? '#ffffff' : '#fff',
+                      backgroundColor: color === 70 ? 'red' : '#c6c6c6',
                     }}
                   >
                     <div
@@ -510,15 +546,17 @@ export default function Home() {
                             : //爆弾
                               color === 35
                               ? -300
-                              : color === 1
-                                ? -270 * 1
-                                : color === 2
-                                  ? -240 * 1
-                                  : color === 100
-                                    ? -300 * 1
-                                    : color === 120
+                              : color === 70
+                                ? -300
+                                : color === 1
+                                  ? -270 * 1
+                                  : color === 2
+                                    ? -240 * 1
+                                    : color === 100
                                       ? -300 * 1
-                                      : -900 * 1 + 30 * color,
+                                      : color === 120
+                                        ? -300 * 1
+                                        : -900 * 1 + 30 * color,
                       }}
                     />
                   </button>
