@@ -282,6 +282,14 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
+  const Bomnummake = (Flags: number) => {
+    if (Flags === undefined) {
+      return 0;
+    } else {
+      return Flags;
+    }
+  };
+
   const [bombmap, setbombmap] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -295,8 +303,13 @@ export default function Home() {
   ]);
 
   type CountMap = Record<number, number>;
-  const flat = bombmap.flat();
-  const counts = flat.reduce<CountMap>((acc, curr) => {
+  const flatB = bombmap.flat();
+  const Bcounts = flatB.reduce<CountMap>((acc, curr) => {
+    acc[curr] = (acc[curr] || 0) + 1;
+    return acc;
+  }, {} as CountMap);
+  const flatU = userinputs.flat();
+  const Ucounts = flatU.reduce<CountMap>((acc, curr) => {
     acc[curr] = (acc[curr] || 0) + 1;
     return acc;
   }, {} as CountMap);
@@ -414,7 +427,7 @@ export default function Home() {
     }
     setuserinputs(newboard);
 
-    if (counts[0] === dekasa[0] * dekasa[1]) {
+    if (Bcounts[0] === dekasa[0] * dekasa[1]) {
       const boms = 0;
       setbombmap(bom(newboard, dekasa[0], dekasa[1], bombom, boms));
     }
@@ -433,7 +446,10 @@ export default function Home() {
     }
     setuserinputs(newboard);
   };
-
+  console.log(Ucounts[0]);
+  console.log(Ucounts[1]);
+  console.log(Ucounts[2]);
+  const Bomnumber = bombom - Bomnummake(Ucounts[1]);
   const boooom = bomcalc(bombmap, userinputs, dekasa[0], dekasa[1]);
   // if (boooom === 5000) {
   //   for (let y = 0; y < dekasa[0]; y++) {
@@ -500,7 +516,8 @@ export default function Home() {
       <div className={styles.boardP}>
         <div className={styles.boardP2}>
           <div className={styles.boardP3}>
-            {uptimer}
+            {Bomnumber}
+            <p>{uptimer}</p>
             <select value={select} onChange={f_sele}>
               <option value={1}>初級</option>
               <option value={2}>中級</option>
