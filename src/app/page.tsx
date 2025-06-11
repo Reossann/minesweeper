@@ -250,7 +250,7 @@ const remove_all = (
         }
       }
     }
-  } //ここに新しい関数もどきをつくる
+  }
   if (trigger === 5000) {
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
@@ -261,6 +261,21 @@ const remove_all = (
     }
   }
   return calcboard;
+};
+
+const clearChecker = (clearboard: number[][], w: number, h: number, Bnum: number) => {
+  let opennum = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (clearboard[y][x] >= 20) {
+        opennum += 1;
+      }
+    }
+  }
+  if (opennum === w * h - Bnum) {
+    return true;
+  }
+  return false;
 };
 
 export default function Home() {
@@ -308,11 +323,13 @@ export default function Home() {
     acc[curr] = (acc[curr] || 0) + 1;
     return acc;
   }, {} as CountMap);
+
   const flatU = userinputs.flat();
   const Ucounts = flatU.reduce<CountMap>((acc, curr) => {
     acc[curr] = (acc[curr] || 0) + 1;
     return acc;
   }, {} as CountMap);
+
   const f_sele = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setselect(value);
@@ -326,6 +343,7 @@ export default function Home() {
       sizechange3();
     }
   };
+
   //初級
   const sizechange0 = () => {
     const newboard = [];
@@ -343,6 +361,7 @@ export default function Home() {
     setuserinputs(newboard);
     setbombmap(newboard);
   };
+
   //中級
   const sizechange1 = () => {
     const newboard = [];
@@ -360,6 +379,7 @@ export default function Home() {
     setuserinputs(newboard);
     setbombmap(newboard);
   };
+
   //上級
   const sizechange2 = () => {
     const newboard = [];
@@ -377,6 +397,7 @@ export default function Home() {
     setuserinputs(newboard);
     setbombmap(newboard);
   };
+
   //カスタム
   const sizechange3 = () => {
     console.log(800);
@@ -418,7 +439,7 @@ export default function Home() {
   };
 
   const clickHandler = (x: number, y: number) => {
-    if (boooom === 5000) {
+    if (boooom === 5000 || Clear) {
       return;
     }
     const newboard = structuredClone(userinputs);
@@ -432,20 +453,7 @@ export default function Home() {
       setbombmap(bom(newboard, dekasa[0], dekasa[1], bombom, boms));
     }
   };
-  const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
-    if (boooom === 5000) {
-      return;
-    }
-    event.preventDefault();
-    console.log(x, y);
-    console.log(50);
-    const newboard = structuredClone(userinputs);
-    if (newboard[y][x] <= 3) newboard[y][x] += 1;
-    if (newboard[y][x] === 3) {
-      newboard[y][x] = 0;
-    }
-    setuserinputs(newboard);
-  };
+
   console.log(Ucounts[0]);
   console.log(Ucounts[1]);
   console.log(Ucounts[2]);
@@ -511,32 +519,57 @@ export default function Home() {
   const CC = remove_all(C, userinputs, dekasa[0], dekasa[1], boooom);
   console.log(CC);
   console.log(10000);
+  const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
+    if (boooom === 5000 || Clear) {
+      return;
+    }
+    event.preventDefault();
+    console.log(x, y);
+    console.log(50);
+    const newboard = structuredClone(userinputs);
+    if (CC[y][x] < 20) {
+      if (newboard[y][x] <= 3) newboard[y][x] += 1;
+      if (newboard[y][x] === 3) {
+        newboard[y][x] = 0;
+      }
+      setuserinputs(newboard);
+    }
+  };
+  const Clear = clearChecker(CC, dekasa[0], dekasa[1], bombom);
+  if (Clear) {
+    for (let y = 0; y < dekasa[1]; y++) {
+      for (let x = 0; x < dekasa[0]; x++) {
+        if (CC[y][x] === 15) {
+          CC[y][x] = 1;
+        }
+      }
+    }
+  }
   return (
     <div className={styles.container}>
+      {Bomnumber}
+      <p>{uptimer}</p>
+      <select value={select} onChange={f_sele}>
+        <option value={1}>初級</option>
+        <option value={2}>中級</option>
+        <option value={3}>上級</option>
+        <option value={4}>カスタム</option>
+      </select>
+      {select === '4' && (
+        <form onSubmit={custom}>
+          <label htmlFor="W">幅：</label>
+          <input className={styles.input} id="W" type="number" name="W" defaultValue={2} />
+          <label htmlFor="H">高さ：</label>
+          <input className={styles.input} id="H" type="number" name="H" defaultValue={2} />
+          <label htmlFor="B">爆弾数：</label>
+          <input className={styles.input} id="B" type="number" name="B" defaultValue={1} />
+          <button>更新</button>
+        </form>
+      )}
+      <div onClick={restart}>リスタート</div>
       <div className={styles.boardP}>
         <div className={styles.boardP2}>
           <div className={styles.boardP3}>
-            {Bomnumber}
-            <p>{uptimer}</p>
-            <select value={select} onChange={f_sele}>
-              <option value={1}>初級</option>
-              <option value={2}>中級</option>
-              <option value={3}>上級</option>
-              <option value={4}>カスタム</option>
-            </select>
-            {select === '4' && (
-              <form onSubmit={custom}>
-                <label htmlFor="W">幅：</label>
-                <input className={styles.input} id="W" type="number" name="W" defaultValue={2} />
-                <label htmlFor="H">高さ：</label>
-                <input className={styles.input} id="H" type="number" name="H" defaultValue={2} />
-                <label htmlFor="B">爆弾数：</label>
-                <input className={styles.input} id="B" type="number" name="B" defaultValue={1} />
-                <button>更新</button>
-              </form>
-            )}
-            <div onClick={restart}>リスタート</div>
-
             <div className={styles.board} style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}>
               {CC.map((row, y) =>
                 row.map((color, x) => (
