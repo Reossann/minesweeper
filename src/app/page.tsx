@@ -12,7 +12,7 @@ const directions = [
   [0, 1],
   [1, 1],
 ];
-
+//ボム作って数字出す関数
 const bom = (b: number[][], w: number, h: number, Sumbom: number, bombcounts: number) => {
   let croneboms = bombcounts;
   const newbom = structuredClone(b);
@@ -93,7 +93,7 @@ const bom = (b: number[][], w: number, h: number, Sumbom: number, bombcounts: nu
   }
   return newbom;
 };
-
+//userinputsとbombmap合体関数
 const calc = (bombmap: number[][], userinputs: number[][], w: number, h: number) => {
   const newcalc = structuredClone(bombmap);
   if (h > w) {
@@ -143,7 +143,7 @@ const calc = (bombmap: number[][], userinputs: number[][], w: number, h: number)
   }
   return newcalc;
 };
-
+//押したとこが爆弾か否か
 const bomcalc = (bombmap: number[][], userinputs: number[][], w: number, h: number) => {
   const newcalc = structuredClone(bombmap);
   if (h > w) {
@@ -167,7 +167,7 @@ const bomcalc = (bombmap: number[][], userinputs: number[][], w: number, h: numb
   }
   return 0;
 };
-
+//リスタート関数
 const remove_all = (
   calcboard: number[][],
   userinputs: number[][],
@@ -182,7 +182,6 @@ const remove_all = (
       for (let x = 0; x < h; x++) {
         if (newuser[x][y] === 20) {
           if (calcboard[x][y] >= 35) {
-            console.log(555);
             continue;
           }
           if (23 <= calcboard[x][y] && calcboard[x][y] <= 30) {
@@ -217,7 +216,6 @@ const remove_all = (
       for (let x = 0; x < w; x++) {
         if (newuser[y][x] === 20) {
           if (anocalcboard[y][x] >= 35) {
-            console.log(555);
             continue;
           }
           if (23 <= calcboard[y][x] && calcboard[y][x] <= 30) {
@@ -229,19 +227,16 @@ const remove_all = (
               continue;
             }
             if (calcboard[y + dy][x + dx] === 15) {
-              console.log(8);
               calcboard[y][x] = calcboard[y][x] + 20;
               break;
             }
             if (calcboard[y + dy][x + dx] === 0) {
-              console.log(9);
               newuser[y + dy][x + dx] = 20;
               calcboard[y + dy][x + dx] = 20;
               return remove_all(calcboard, newuser, w, h, trigger);
             }
 
             if (3 <= calcboard[y + dy][x + dx] && calcboard[y + dy][x + dx] <= 10) {
-              console.log(10);
               newuser[y + dy][x + dx] = 20;
               calcboard[y + dy][x + dx] = 20 + calcboard[y + dy][x + dx];
               continue;
@@ -262,7 +257,7 @@ const remove_all = (
   }
   return calcboard;
 };
-
+//成功か否かを判定する関数
 const clearChecker = (clearboard: number[][], w: number, h: number, Bnum: number) => {
   let opennum = 0;
   for (let y = 0; y < h; y++) {
@@ -297,7 +292,10 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  const Bomnummake = (Flags: number) => {
+  const Bomnummake = (Flags: number, bombom: number, Cl: boolean) => {
+    if (Cl) {
+      return bombom;
+    }
     if (Flags === undefined) {
       return 0;
     } else {
@@ -400,7 +398,6 @@ export default function Home() {
 
   //カスタム
   const sizechange3 = () => {
-    console.log(800);
     if (bombom === 1) {
       return;
     }
@@ -430,7 +427,6 @@ export default function Home() {
       }
       newboard.push(row);
     }
-    console.log(newboard);
     flag.current = true;
     setdekasa([Number(fromdata.get('W')), Number(fromdata.get('H'))]);
     setbombom(Number(fromdata.get('B')));
@@ -454,11 +450,22 @@ export default function Home() {
     }
   };
 
-  console.log(Ucounts[0]);
-  console.log(Ucounts[1]);
-  console.log(Ucounts[2]);
-  const Bomnumber = bombom - Bomnummake(Ucounts[1]);
   const boooom = bomcalc(bombmap, userinputs, dekasa[0], dekasa[1]);
+  const C = calc(bombmap, userinputs, dekasa[0], dekasa[1]);
+  const CC = remove_all(C, userinputs, dekasa[0], dekasa[1], boooom);
+  const Clear = clearChecker(CC, dekasa[0], dekasa[1], bombom);
+  if (Clear) {
+    for (let y = 0; y < dekasa[1]; y++) {
+      for (let x = 0; x < dekasa[0]; x++) {
+        if (CC[y][x] === 15) {
+          CC[y][x] = 1;
+        }
+      }
+    }
+  }
+  const Bomnumber = bombom - Bomnummake(Ucounts[1], bombom, Clear);
+  console.log(Bomnumber);
+
   // if (boooom === 5000) {
   //   for (let y = 0; y < dekasa[0]; y++) {
   //     for (let x = 0; x < dekasa[1]; x++) {
@@ -513,12 +520,7 @@ export default function Home() {
     flag.current = true;
     return;
   };
-  const C = calc(bombmap, userinputs, dekasa[0], dekasa[1]);
-  console.log(C);
-  console.log(9999);
-  const CC = remove_all(C, userinputs, dekasa[0], dekasa[1], boooom);
-  console.log(CC);
-  console.log(10000);
+
   const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
     if (boooom === 5000 || Clear) {
       return;
@@ -535,16 +537,7 @@ export default function Home() {
       setuserinputs(newboard);
     }
   };
-  const Clear = clearChecker(CC, dekasa[0], dekasa[1], bombom);
-  if (Clear) {
-    for (let y = 0; y < dekasa[1]; y++) {
-      for (let x = 0; x < dekasa[0]; x++) {
-        if (CC[y][x] === 15) {
-          CC[y][x] = 1;
-        }
-      }
-    }
-  }
+
   return (
     <div className={styles.container}>
       {Bomnumber}
