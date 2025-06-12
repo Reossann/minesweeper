@@ -491,32 +491,17 @@ export default function Home() {
     }
   }, [bombmap]);
   const restart = () => {
-    setbombmap([
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]);
-    setdekasa([9, 9]);
-    setbombom(10);
+    const newboard = [];
+    for (let i = 0; i < dekasa[1]; i++) {
+      const row = [];
+      for (let j = 0; j < dekasa[0]; j++) {
+        row.push(0);
+      }
+      newboard.push(row);
+    }
     setuptimer(0);
-    setselect('');
-    setuserinputs([
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]);
+    setuserinputs(newboard);
+    setbombmap(newboard);
     flag.current = true;
     return;
   };
@@ -573,10 +558,8 @@ export default function Home() {
                     onContextMenu={(event) => clickrightHandler(x, y, event)}
                     style={{
                       border: color >= 20 ? '1px solid' : '5px solid',
-                      borderTopColor: color >= 20 ? '#ffffff' : '#fff',
-                      borderLeftColor: color >= 20 ? '#ffffff' : '#808080',
-                      borderBottomColor: color >= 20 ? '#ffffff' : '#808080',
-                      borderRightColor: color >= 20 ? '#ffffff' : '#fff',
+                      borderTopColor: color >= 20 ? '#808080' : '#fff',
+                      borderLeftColor: color >= 20 ? '#808080' : '#fff',
                       backgroundColor: color === 70 ? 'red' : '#c6c6c6',
                     }}
                   >
