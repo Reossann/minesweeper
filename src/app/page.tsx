@@ -525,69 +525,76 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      {Bomnumber}
-      <p>{uptimer}</p>
-      <select value={select} onChange={f_sele}>
-        <option value={1}>初級</option>
-        <option value={2}>中級</option>
-        <option value={3}>上級</option>
-        <option value={4}>カスタム</option>
-      </select>
-      {select === '4' && (
-        <form onSubmit={custom}>
-          <label htmlFor="W">幅：</label>
-          <input className={styles.input} id="W" type="number" name="W" defaultValue={2} />
-          <label htmlFor="H">高さ：</label>
-          <input className={styles.input} id="H" type="number" name="H" defaultValue={2} />
-          <label htmlFor="B">爆弾数：</label>
-          <input className={styles.input} id="B" type="number" name="B" defaultValue={1} />
-          <button>更新</button>
-        </form>
-      )}
-      <div onClick={restart}>リスタート</div>
-      <div className={styles.boardP}>
-        <div className={styles.boardP2}>
-          <div className={styles.boardP3}>
-            <div className={styles.board} style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}>
-              {CC.map((row, y) =>
-                row.map((color, x) => (
-                  <button
-                    className={styles.cell}
-                    key={`${x}-${y}`}
-                    onClick={() => clickHandler(x, y)}
-                    onContextMenu={(event) => clickrightHandler(x, y, event)}
-                    style={{
-                      border: color >= 20 ? '1px solid' : '5px solid',
-                      borderTopColor: color >= 20 ? '#808080' : '#fff',
-                      borderLeftColor: color >= 20 ? '#808080' : '#fff',
-                      backgroundColor: color === 70 ? 'red' : '#c6c6c6',
-                    }}
-                  >
-                    <div
-                      className={styles.samplecell}
+      <div className={styles.boardMini}>
+        {Bomnumber}
+        <p>{uptimer}</p>
+        <select value={select} onChange={f_sele}>
+          <option value={1}>初級</option>
+          <option value={2}>中級</option>
+          <option value={3}>上級</option>
+          <option value={4}>カスタム</option>
+        </select>
+        {select === '4' && (
+          <form onSubmit={custom}>
+            <label htmlFor="W">幅：</label>
+            <input className={styles.input} id="W" type="number" name="W" defaultValue={2} />
+            <label htmlFor="H">高さ：</label>
+            <input className={styles.input} id="H" type="number" name="H" defaultValue={2} />
+            <label htmlFor="B">爆弾数：</label>
+            <input className={styles.input} id="B" type="number" name="B" defaultValue={1} />
+            <button>更新</button>
+          </form>
+        )}
+        <div onClick={restart}>リスタート</div>
+      </div>
+      <div className={styles.boardB}>
+        <div className={styles.boardP}>
+          <div className={styles.boardP2}>
+            <div className={styles.boardP3}>
+              <div
+                className={styles.board}
+                style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}
+              >
+                {CC.map((row, y) =>
+                  row.map((color, x) => (
+                    <button
+                      className={styles.cell}
+                      key={`${x}-${y}`}
+                      onClick={() => clickHandler(x, y)}
+                      onContextMenu={(event) => clickrightHandler(x, y, event)}
                       style={{
-                        backgroundPosition:
-                          color === 20
-                            ? 30 * 1
-                            : //爆弾
-                              color === 35
-                              ? -300
-                              : color === 70
-                                ? -300
-                                : color === 1
-                                  ? -270 * 1
-                                  : color === 2
-                                    ? -240 * 1
-                                    : color === 100
-                                      ? -300 * 1
-                                      : color === 120
-                                        ? -300 * 1
-                                        : -900 * 1 + 30 * color,
+                        border: color >= 20 ? '1px solid #808080' : '5px solid #808080',
+                        borderTopColor: color >= 20 ? '#808080' : '#fff',
+                        borderLeftColor: color >= 20 ? '#808080' : '#fff',
+                        backgroundColor: color === 70 ? 'red' : '#c6c6c6',
                       }}
-                    />
-                  </button>
-                )),
-              )}
+                    >
+                      <div
+                        className={styles.samplecell}
+                        style={{
+                          backgroundPosition:
+                            color === 20
+                              ? 30 * 1
+                              : //爆弾
+                                color === 35
+                                ? -300
+                                : color === 70
+                                  ? -300
+                                  : color === 1
+                                    ? -270 * 1
+                                    : color === 2
+                                      ? -240 * 1
+                                      : color === 100
+                                        ? -300 * 1
+                                        : color === 120
+                                          ? -300 * 1
+                                          : -900 * 1 + 30 * color,
+                        }}
+                      />
+                    </button>
+                  )),
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -13,10 +13,30 @@
   flex-flow: column wrap;
   align-items: center;
   justify-content: center;
-  width: 400px;
-  height: 400px;
+  width: 335px;
+  height: 335px;
   border: 10px solid;
-  border-color: black #808080 #808080 black;
+  border-color: white #808080 #808080 white;
+}
+
+.boardB {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+  width: 336px;
+  height: 336px;
+  border: 1px solid black;
+}
+
+.boardMini {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+  width: 336px;
+  height: 120px;
+  border: 1px solid black;
 }
 
 .boardP3 {
@@ -24,8 +44,8 @@
   flex-flow: column wrap;
   align-items: center;
   justify-content: center;
-  width: 342px;
-  height: 342px;
+  width: 290px;
+  height: 290px;
   border: 10px solid;
   border-color: #808080 #fff #fff#808080;
 }
@@ -35,9 +55,9 @@
   flex-flow: column wrap;
   align-items: center;
   justify-content: center;
-  width: 362px;
-  height: 362px;
-  border: 10px solid #c6c6c6;
+  width: 318px;
+  height: 318px;
+  border: 15px solid #c6c6c6;
 }
 
 .board {
@@ -53,8 +73,6 @@
   width: 30px;
   height: 30px;
   border: 5px solid;
-  border-right: #808080;
-  border-bottom: #808080;
 }
 
 .samplecell {
