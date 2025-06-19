@@ -11,8 +11,6 @@
 .boardP {
   display: flex;
   flex-flow: column wrap;
-  align-items: center;
-  justify-content: center;
   width: 335px;
   height: 335px;
   border: 10px solid;
@@ -22,10 +20,8 @@
 .boardB {
   display: flex;
   flex-flow: column wrap;
-  align-items: center;
-  justify-content: center;
   width: 336px;
-  height: 336px;
+  height: 500px;
   border: 1px solid black;
 }
 
@@ -40,7 +36,7 @@
 }
 
 .boardP3 {
-  display: flex;
+  display: block;
   flex-flow: column wrap;
   align-items: center;
   justify-content: center;
@@ -53,8 +49,6 @@
 .boardP2 {
   display: flex;
   flex-flow: column wrap;
-  align-items: center;
-  justify-content: center;
   width: 318px;
   height: 318px;
   border: 15px solid #c6c6c6;
@@ -82,6 +76,13 @@
 }
 
 .input {
-  width: 60px;
-  height: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mini {
+  width: 80px;
+  height: 50px;
+  text-align: center;
+  border: 2px solid red;
 }

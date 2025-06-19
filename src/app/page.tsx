@@ -525,32 +525,34 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.boardMini}>
-        {Bomnumber}
-        <p>{uptimer}</p>
-        <select value={select} onChange={f_sele}>
-          <option value={1}>初級</option>
-          <option value={2}>中級</option>
-          <option value={3}>上級</option>
-          <option value={4}>カスタム</option>
-        </select>
-        {select === '4' && (
-          <form onSubmit={custom}>
-            <label htmlFor="W">幅：</label>
-            <input className={styles.input} id="W" type="number" name="W" defaultValue={2} />
-            <label htmlFor="H">高さ：</label>
-            <input className={styles.input} id="H" type="number" name="H" defaultValue={2} />
-            <label htmlFor="B">爆弾数：</label>
-            <input className={styles.input} id="B" type="number" name="B" defaultValue={1} />
-            <button>更新</button>
-          </form>
-        )}
-        <div onClick={restart}>リスタート</div>
-      </div>
+      <select value={select} onChange={f_sele}>
+        <option value={1}>初級</option>
+        <option value={2}>中級</option>
+        <option value={3}>上級</option>
+        <option value={4}>カスタム</option>
+      </select>
+      {select === '4' && (
+        <form onSubmit={custom}>
+          <label htmlFor="W">幅：</label>
+          <input className={styles.input} id="W" type="number" name="W" defaultValue={2} />
+          <label htmlFor="H">高さ：</label>
+          <input className={styles.input} id="H" type="number" name="H" defaultValue={2} />
+          <label htmlFor="B">爆弾数：</label>
+          <input className={styles.input} id="B" type="number" name="B" defaultValue={1} />
+          <button>更新</button>
+        </form>
+      )}
       <div className={styles.boardB}>
         <div className={styles.boardP}>
           <div className={styles.boardP2}>
             <div className={styles.boardP3}>
+              <div className={styles.input}>
+                {Bomnumber}
+                <div className={styles.mini} onClick={restart}>
+                  リスタート
+                </div>
+                <div className={styles.mini}>{uptimer}</div>
+              </div>
               <div
                 className={styles.board}
                 style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}
