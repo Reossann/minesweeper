@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './page.module.css';
 const directions = [
   [1, 0],
@@ -480,14 +480,14 @@ export default function Home() {
   const flag = useRef(true);
   useEffect(() => {
     {
-      if (flag.current) {
-        flag.current = false;
-        return;
-      }
-      const Interbal = setInterval(() => {
-        setuptimer((uptimer) => uptimer + 1);
-      }, 1000);
-      return () => clearInterval(Interbal);
+      // if (flag.current) {
+      //   flag.current = false;
+      //   return;
+      // }
+      // const Interbal = setInterval(() => {
+      //   setuptimer((uptimer) => uptimer + 1);
+      // }, 1000);
+      // return () => clearInterval(Interbal);
     }
   }, [bombmap]);
   const restart = () => {
