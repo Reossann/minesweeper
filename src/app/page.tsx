@@ -167,7 +167,7 @@ const bomcalc = (bombmap: number[][], userinputs: number[][], w: number, h: numb
   }
   return 0;
 };
-//リスタート関数
+//再帰関数
 const remove_all = (
   calcboard: number[][],
   userinputs: number[][],
@@ -490,6 +490,7 @@ export default function Home() {
       // return () => clearInterval(Interbal);
     }
   }, [bombmap]);
+  //restert
   const restart = () => {
     const newboard = [];
     for (let i = 0; i < dekasa[1]; i++) {
@@ -542,7 +543,10 @@ export default function Home() {
           <button>更新</button>
         </form>
       )}
-      <div className={styles.boardB}>
+      <div
+        className={styles.boardB}
+        style={{ width: 70 + dekasa[0] * 30, height: 150 + dekasa[1] * 30 }}
+      >
         <div className={styles.boardP}>
           <div className={styles.boardP2}>
             <div className={styles.boardP3}>
@@ -552,7 +556,8 @@ export default function Home() {
                   リスタート
                 </div>
                 <div className={styles.mini}>{uptimer}</div>
-              </div>
+              </div>{' '}
+              <div className={styles.midline} />
               <div
                 className={styles.board}
                 style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}
