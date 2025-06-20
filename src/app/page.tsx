@@ -480,14 +480,14 @@ export default function Home() {
   const flag = useRef(true);
   useEffect(() => {
     {
-      // if (flag.current) {
-      //   flag.current = false;
-      //   return;
-      // }
-      // const Interbal = setInterval(() => {
-      //   setuptimer((uptimer) => uptimer + 1);
-      // }, 1000);
-      // return () => clearInterval(Interbal);
+      if (flag.current) {
+        flag.current = false;
+        return;
+      }
+      const Interbal = setInterval(() => {
+        setuptimer((uptimer) => uptimer + 1);
+      }, 1000);
+      return () => clearInterval(Interbal);
     }
   }, [bombmap]);
   //restert
@@ -545,17 +545,62 @@ export default function Home() {
       )}
       <div
         className={styles.boardB}
-        style={{ width: 70 + dekasa[0] * 30, height: 150 + dekasa[1] * 30 }}
+        style={{ width: 70 + dekasa[0] * 30, height: 160 + dekasa[1] * 30 }}
       >
         <div className={styles.boardP}>
           <div className={styles.boardP2}>
             <div className={styles.boardP3}>
               <div className={styles.input}>
-                {Bomnumber}
+                <div className={styles.numberbox}>
+                  <div
+                    className={styles.digital}
+                    style={{
+                      backgroundPositionX: -29 + Math.floor(Bomnumber / 100) * 21.9,
+                      backgroundPositionY: -50,
+                    }}
+                  />
+                  <div
+                    className={styles.digital}
+                    style={{
+                      backgroundPositionX: -29 + Math.floor((Bomnumber % 100) / 10) * -21.9,
+                      backgroundPositionY: -50,
+                    }}
+                  />
+                  <div
+                    className={styles.digital}
+                    style={{
+                      backgroundPositionX: -29 + (Bomnumber % 10) * -21.9,
+                      backgroundPositionY: -50,
+                    }}
+                  />
+                </div>
+
                 <div className={styles.mini} onClick={restart}>
                   リスタート
                 </div>
-                <div className={styles.mini}>{uptimer}</div>
+                <div className={styles.numberbox}>
+                  <div
+                    className={styles.digital}
+                    style={{
+                      backgroundPositionX: -29 + Math.floor(uptimer / 100) * -21.9,
+                      backgroundPositionY: -50,
+                    }}
+                  />
+                  <div
+                    className={styles.digital}
+                    style={{
+                      backgroundPositionX: -29 + Math.floor((uptimer % 100) / 10) * -21.9,
+                      backgroundPositionY: -50,
+                    }}
+                  />
+                  <div
+                    className={styles.digital}
+                    style={{
+                      backgroundPositionX: -29 + (uptimer % 10) * -21.9,
+                      backgroundPositionY: -50,
+                    }}
+                  />
+                </div>
               </div>{' '}
               <div className={styles.midline} />
               <div
