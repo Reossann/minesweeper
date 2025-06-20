@@ -22,33 +22,33 @@ const bom = (b: number[][], w: number, h: number, Sumbom: number, bombcounts: nu
         if (croneboms === Sumbom) {
           break;
         }
-        if (newbom[x][y] !== 20) {
+        if (newbom[y][x] !== 20) {
           const ram = Math.floor(Math.random() * 20);
           if (ram === 1) {
-            if (newbom[x][y] !== 15) {
-              newbom[x][y] = 15;
+            if (newbom[y][x] !== 15) {
+              newbom[y][x] = 15;
               croneboms += 1;
             }
           }
         }
       }
     }
-    if (bombcounts !== Sumbom) {
+    if (croneboms !== Sumbom) {
       return bom(newbom, w, h, Sumbom, croneboms);
     }
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         let bommmmmmm = 0;
-        if (newbom[x][y] !== 15) {
-          for (const [dx, dy] of directions) {
-            if (newbom[x + dx] !== undefined) {
-              if (newbom[x + dx][y + dy] === 15) {
+        if (newbom[y][x] !== 15) {
+          for (const [dy, dx] of directions) {
+            if (newbom[y + dy] !== undefined) {
+              if (newbom[y + dy][x + dx] === 15) {
                 bommmmmmm += 1;
               }
             }
           }
           if (bommmmmmm !== 0) {
-            newbom[x][y] = 11 - 1 * bommmmmmm;
+            newbom[y][x] = 11 - 1 * bommmmmmm;
           }
         }
       }
@@ -70,7 +70,7 @@ const bom = (b: number[][], w: number, h: number, Sumbom: number, bombcounts: nu
         }
       }
     }
-    if (bombcounts !== Sumbom) {
+    if (croneboms !== Sumbom) {
       return bom(newbom, w, h, Sumbom, croneboms);
     }
     for (let y = 0; y < h; y++) {
@@ -99,22 +99,22 @@ const calc = (bombmap: number[][], userinputs: number[][], w: number, h: number)
   if (h > w) {
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        if (userinputs[x][y] === bombmap[x][y]) {
+        if (userinputs[y][x] === bombmap[y][x]) {
           continue;
         }
-        if (userinputs[x][y] === 1 || userinputs[x][y] === 2) {
-          newcalc[x][y] = userinputs[x][y];
+        if (userinputs[y][x] === 1 || userinputs[y][x] === 2) {
+          newcalc[y][x] = userinputs[y][x];
           continue;
         }
-        if (newcalc[x][y] === userinputs[x][y]) {
+        if (newcalc[y][x] === userinputs[y][x]) {
           continue;
         }
-        if (newcalc[x][y] === 55) {
+        if (newcalc[y][x] === 55) {
           continue;
         }
-        newcalc[x][y] = bombmap[x][y] + userinputs[x][y];
-        if (newcalc[x][y] === 35) {
-          newcalc[x][y] = 70;
+        newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
+        if (newcalc[y][x] === 35) {
+          newcalc[y][x] = 70;
         }
       }
     }
@@ -149,8 +149,8 @@ const bomcalc = (bombmap: number[][], userinputs: number[][], w: number, h: numb
   if (h > w) {
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        newcalc[x][y] = bombmap[x][y] + userinputs[x][y];
-        if (newcalc[x][y] === 35) {
+        newcalc[y][x] = bombmap[y][x] + userinputs[y][x];
+        if (newcalc[y][x] === 35) {
           return 5000;
         }
       }
@@ -178,33 +178,33 @@ const remove_all = (
   const newuser = structuredClone(userinputs);
   const anocalcboard = structuredClone(calcboard);
   if (h > w) {
-    for (let y = 0; y < w; y++) {
-      for (let x = 0; x < h; x++) {
-        if (newuser[x][y] === 20) {
-          if (calcboard[x][y] >= 35) {
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (newuser[y][x] === 20) {
+          if (calcboard[y][x] >= 35) {
             continue;
           }
-          if (23 <= calcboard[x][y] && calcboard[x][y] <= 30) {
+          if (23 <= calcboard[y][x] && calcboard[y][x] <= 30) {
             continue;
           }
 
           for (const [dy, dx] of directions) {
-            if (calcboard[x + dx] === undefined) {
+            if (calcboard[y + dy] === undefined) {
               continue;
             }
-            if (calcboard[x + dx][y + dy] === 15) {
-              calcboard[x][y] = calcboard[x][y] + 20;
+            if (calcboard[y + dy][x + dx] === 15) {
+              calcboard[y][x] = calcboard[y][x] + 20;
               break;
             }
-            if (calcboard[x + dx][y + dy] === 0) {
-              newuser[x + dx][y + dy] = 20;
-              calcboard[x + dx][y + dy] = 20;
+            if (calcboard[y + dy][x + dx] === 0) {
+              newuser[y + dy][x + dx] = 20;
+              calcboard[y + dy][x + dx] = 20;
               return remove_all(calcboard, newuser, w, h, trigger);
             }
 
-            if (3 <= calcboard[x + dx][y + dy] && calcboard[x + dx][y + dy] <= 10) {
-              newuser[x + dx][y + dy] = 20;
-              calcboard[x + dx][y + dy] = 20 + calcboard[x + dx][y + dy];
+            if (3 <= calcboard[y + dy][x + dx] && calcboard[y + dy][x + dx] <= 10) {
+              newuser[y + dy][x + dx] = 20;
+              calcboard[y + dy][x + dx] = 20 + calcboard[y + dy][x + dx];
               continue;
             }
           }
@@ -258,7 +258,13 @@ const remove_all = (
   return calcboard;
 };
 //成功か否かを判定する関数
-const clearChecker = (clearboard: number[][], w: number, h: number, Bnum: number) => {
+const clearChecker = (
+  clearboard: number[][],
+  w: number,
+  h: number,
+  Bnum: number,
+  boooom: number,
+) => {
   let opennum = 0;
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -268,9 +274,12 @@ const clearChecker = (clearboard: number[][], w: number, h: number, Bnum: number
     }
   }
   if (opennum === w * h - Bnum) {
-    return true;
+    return 1;
   }
-  return false;
+  if (boooom === 5000) {
+    return 2;
+  }
+  return 0;
 };
 
 export default function Home() {
@@ -292,8 +301,8 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  const Bomnummake = (Flags: number, bombom: number, Cl: boolean) => {
-    if (Cl) {
+  const Bomnummake = (Flags: number, bombom: number, Cl: number) => {
+    if (Cl === 1) {
       return bombom;
     }
     if (Flags === undefined) {
@@ -402,17 +411,17 @@ export default function Home() {
       return;
     }
     const newboard = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 12; i++) {
       const row = [];
-      for (let j = 0; j < 2; j++) {
+      for (let j = 0; j < 10; j++) {
         row.push(0);
       }
       newboard.push(row);
     }
     flag.current = true;
     setuptimer(0);
-    setbombom(1);
-    setdekasa([2, 2]);
+    setbombom(8);
+    setdekasa([10, 12]);
     setuserinputs(newboard);
     setbombmap(newboard);
   };
@@ -426,6 +435,14 @@ export default function Home() {
         row.push(0);
       }
       newboard.push(row);
+    }
+    if (Number(fromdata.get('H')) * Number(fromdata.get('W')) <= Number(fromdata.get('B'))) {
+      flag.current = true;
+      setdekasa([Number(fromdata.get('W')), Number(fromdata.get('H'))]);
+      setbombom(Math.floor(Number(fromdata.get('H')) * Number(fromdata.get('W'))) / 3);
+      setuserinputs(newboard);
+      setbombmap(newboard);
+      return;
     }
     flag.current = true;
     setdekasa([Number(fromdata.get('W')), Number(fromdata.get('H'))]);
@@ -453,8 +470,8 @@ export default function Home() {
   const boooom = bomcalc(bombmap, userinputs, dekasa[0], dekasa[1]);
   const C = calc(bombmap, userinputs, dekasa[0], dekasa[1]);
   const CC = remove_all(C, userinputs, dekasa[0], dekasa[1], boooom);
-  const Clear = clearChecker(CC, dekasa[0], dekasa[1], bombom);
-  if (Clear) {
+  const Clear = clearChecker(CC, dekasa[0], dekasa[1], bombom, boooom);
+  if (Clear === 1) {
     for (let y = 0; y < dekasa[1]; y++) {
       for (let x = 0; x < dekasa[0]; x++) {
         if (CC[y][x] === 15) {
@@ -464,17 +481,6 @@ export default function Home() {
     }
   }
   const Bomnumber = bombom - Bomnummake(Ucounts[1], bombom, Clear);
-  console.log(Bomnumber);
-
-  if (boooom === 5000) {
-    for (let y = 0; y < dekasa[0]; y++) {
-      for (let x = 0; x < dekasa[1]; x++) {
-        if (bombmap[y][x] === 15) {
-          userinputs;
-        }
-      }
-    }
-  }
 
   const [uptimer, setuptimer] = useState(0);
   const flag = useRef(true);
@@ -484,12 +490,16 @@ export default function Home() {
         flag.current = false;
         return;
       }
+      if (boooom === 5000 || Clear) {
+        return;
+      }
+
       const Interbal = setInterval(() => {
         setuptimer((uptimer) => uptimer + 1);
       }, 1000);
       return () => clearInterval(Interbal);
     }
-  }, [bombmap]);
+  }, [bombmap, boooom, Clear]);
   //restert
   const restart = () => {
     const newboard = [];
@@ -535,11 +545,18 @@ export default function Home() {
       {select === '4' && (
         <form onSubmit={custom}>
           <label htmlFor="W">幅：</label>
-          <input className={styles.input} id="W" type="number" name="W" defaultValue={2} />
+          <input className={styles.input} id="W" type="number" name="W" defaultValue={10} />
           <label htmlFor="H">高さ：</label>
-          <input className={styles.input} id="H" type="number" name="H" defaultValue={2} />
+          <input className={styles.input} id="H" type="number" name="H" defaultValue={12} />
           <label htmlFor="B">爆弾数：</label>
-          <input className={styles.input} id="B" type="number" name="B" defaultValue={1} />
+          <input
+            className={styles.input}
+            id="B"
+            type="number"
+            name="B"
+            value={bombom}
+            onChange={(e) => setbombom(Number(e.target.value))}
+          />
           <button>更新</button>
         </form>
       )}
@@ -574,9 +591,12 @@ export default function Home() {
                     }}
                   />
                 </div>
-
-                <div className={styles.mini} onClick={restart}>
-                  リスタート
+                <div className={styles.rest}>
+                  <div
+                    className={styles.mini}
+                    onClick={restart}
+                    style={{ backgroundPositionX: -330 + Clear * -30 }}
+                  />
                 </div>
                 <div className={styles.numberbox}>
                   <div
@@ -601,7 +621,7 @@ export default function Home() {
                     }}
                   />
                 </div>
-              </div>{' '}
+              </div>
               <div className={styles.midline} />
               <div
                 className={styles.board}
