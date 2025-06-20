@@ -466,28 +466,28 @@ export default function Home() {
   const Bomnumber = bombom - Bomnummake(Ucounts[1], bombom, Clear);
   console.log(Bomnumber);
 
-  // if (boooom === 5000) {
-  //   for (let y = 0; y < dekasa[0]; y++) {
-  //     for (let x = 0; x < dekasa[1]; x++) {
-  //       if (bombmap[y][x] === 15) {
-  //         userinputs;
-  //       }
-  //     }
-  //   }
-  // }
+  if (boooom === 5000) {
+    for (let y = 0; y < dekasa[0]; y++) {
+      for (let x = 0; x < dekasa[1]; x++) {
+        if (bombmap[y][x] === 15) {
+          userinputs;
+        }
+      }
+    }
+  }
 
   const [uptimer, setuptimer] = useState(0);
   const flag = useRef(true);
   useEffect(() => {
     {
-      // if (flag.current) {
-      //   flag.current = false;
-      //   return;
-      // }
-      // const Interbal = setInterval(() => {
-      //   setuptimer((uptimer) => uptimer + 1);
-      // }, 1000);
-      // return () => clearInterval(Interbal);
+      if (flag.current) {
+        flag.current = false;
+        return;
+      }
+      const Interbal = setInterval(() => {
+        setuptimer((uptimer) => uptimer + 1);
+      }, 1000);
+      return () => clearInterval(Interbal);
     }
   }, [bombmap]);
   const restart = () => {
