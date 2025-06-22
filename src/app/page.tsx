@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Board } from '../components/Board';
-import { DifficultySelector } from '../components/Difficultyselector';
 import { Header } from '../components/Header';
+import { DifficultySelector } from '../components/Select';
 import styles from './page.module.css';
 
 const directions = [
@@ -285,6 +285,7 @@ const clearChecker = (
   return 0;
 };
 
+//ここからHomeコンポーネント
 export default function Home() {
   const [select, setselect] = useState('');
 
@@ -543,7 +544,6 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      {' '}
       <DifficultySelector
         selectedDifficulty={select}
         onDifficultyChange={f_sele}
