@@ -1,7 +1,10 @@
 'use client';
-
 import { useEffect, useRef, useState } from 'react';
+import { Board } from '../components/Board';
+import { DifficultySelector } from '../components/Difficultyselector';
+import { Header } from '../components/Header';
 import styles from './page.module.css';
+
 const directions = [
   [1, 0],
   [1, -1],
@@ -405,7 +408,6 @@ export default function Home() {
     setbombmap(newboard);
   };
 
-  //カスタム
   const sizechange3 = () => {
     if (bombom === 1) {
       return;
@@ -425,31 +427,29 @@ export default function Home() {
     setuserinputs(newboard);
     setbombmap(newboard);
   };
-  const custom = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const fromdata = new FormData(event.currentTarget);
-    if (Number(fromdata.get('H')) * Number(fromdata.get('W')) >= 1000) {
+  //カスタム
+  const custom = (width: number, height: number, bombs: number) => {
+    if (height * width >= 1000) {
       return alert('1000マス以上は処理が追い付かないよ！');
     }
+
     const newboard = [];
-    for (let i = 0; i < Number(fromdata.get('H')); i++) {
+    for (let i = 0; i < height; i++) {
       const row = [];
-      for (let j = 0; j < Number(fromdata.get('W')); j++) {
+      for (let j = 0; j < width; j++) {
         row.push(0);
       }
       newboard.push(row);
     }
-    if (Number(fromdata.get('H')) * Number(fromdata.get('W')) <= Number(fromdata.get('B'))) {
-      flag.current = true;
-      setdekasa([Number(fromdata.get('W')), Number(fromdata.get('H'))]);
-      setbombom(Math.floor(Number(fromdata.get('H')) * Number(fromdata.get('W'))) / 3);
-      setuserinputs(newboard);
-      setbombmap(newboard);
-      return;
+
+    let finalBombs = bombs;
+    if (height * width <= bombs) {
+      finalBombs = Math.floor((height * width) / 3);
     }
+
     flag.current = true;
-    setdekasa([Number(fromdata.get('W')), Number(fromdata.get('H'))]);
-    setbombom(Number(fromdata.get('B')));
+    setdekasa([width, height]);
+    setbombom(finalBombs);
     setuptimer(0);
     setuserinputs(newboard);
     setbombmap(newboard);
@@ -543,140 +543,26 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <select value={select} onChange={f_sele}>
-        <option value={1}>初級</option>
-        <option value={2}>中級</option>
-        <option value={3}>上級</option>
-        <option value={4}>カスタム</option>
-      </select>
-      {select === '4' && (
-        <form onSubmit={custom}>
-          <label htmlFor="W">幅：</label>
-          <input className={styles.input} id="W" type="number" name="W" defaultValue={10} />
-          <label htmlFor="H">高さ：</label>
-          <input className={styles.input} id="H" type="number" name="H" defaultValue={12} />
-          <label htmlFor="B">爆弾数：</label>
-          <input
-            className={styles.input}
-            id="B"
-            type="number"
-            name="B"
-            value={bombom}
-            onChange={(e) => setbombom(Number(e.target.value))}
-          />
-          <button>更新</button>
-        </form>
-      )}
+      {' '}
+      <DifficultySelector
+        selectedDifficulty={select}
+        onDifficultyChange={f_sele}
+        onCustomSubmit={custom}
+        currentBombCount={bombom}
+      />
       <div
         className={styles.boardB}
         style={{ width: 70 + dekasa[0] * 30, height: 160 + dekasa[1] * 30 }}
       >
-        <div className={styles.boardP}>
-          <div className={styles.boardP2}>
-            <div className={styles.boardP3}>
-              <div className={styles.input}>
-                <div className={styles.numberbox}>
-                  <div
-                    className={styles.digital}
-                    style={{
-                      backgroundPositionX: -29 + Math.floor(Bomnumber / 100) * -21.9,
-                      backgroundPositionY: -50,
-                    }}
-                  />
-                  <div
-                    className={styles.digital}
-                    style={{
-                      backgroundPositionX: -29 + Math.floor((Bomnumber % 100) / 10) * -21.9,
-                      backgroundPositionY: -50,
-                    }}
-                  />
-                  <div
-                    className={styles.digital}
-                    style={{
-                      backgroundPositionX: -29 + (Bomnumber % 10) * -21.9,
-                      backgroundPositionY: -50,
-                    }}
-                  />
-                </div>
-                <div className={styles.rest}>
-                  <div
-                    className={styles.mini}
-                    onClick={restart}
-                    style={{ backgroundPositionX: -330 + Clear * -30 }}
-                  />
-                </div>
-                <div className={styles.numberbox}>
-                  <div
-                    className={styles.digital}
-                    style={{
-                      backgroundPositionX: -29 + Math.floor(uptimer / 100) * -21.9,
-                      backgroundPositionY: -50,
-                    }}
-                  />
-                  <div
-                    className={styles.digital}
-                    style={{
-                      backgroundPositionX: -29 + Math.floor((uptimer % 100) / 10) * -21.9,
-                      backgroundPositionY: -50,
-                    }}
-                  />
-                  <div
-                    className={styles.digital}
-                    style={{
-                      backgroundPositionX: -29 + (uptimer % 10) * -21.9,
-                      backgroundPositionY: -50,
-                    }}
-                  />
-                </div>
-              </div>
-              <div className={styles.midline} />
-              <div
-                className={styles.board}
-                style={{ width: 30 * dekasa[0], height: 30 * dekasa[1] }}
-              >
-                {CC.map((row, y) =>
-                  row.map((color, x) => (
-                    <button
-                      className={styles.cell}
-                      key={`${x}-${y}`}
-                      onClick={() => clickHandler(x, y)}
-                      onContextMenu={(event) => clickrightHandler(x, y, event)}
-                      style={{
-                        border: color >= 20 ? '1px solid #808080' : '5px solid #808080',
-                        borderTopColor: color >= 20 ? '#808080' : '#fff',
-                        borderLeftColor: color >= 20 ? '#808080' : '#fff',
-                        backgroundColor: color === 70 ? 'red' : '#c6c6c6',
-                      }}
-                    >
-                      <div
-                        className={styles.samplecell}
-                        style={{
-                          backgroundPosition:
-                            color === 20
-                              ? 30 * 1
-                              : //爆弾
-                                color === 35
-                                ? -300
-                                : color === 70
-                                  ? -300
-                                  : color === 1
-                                    ? -270 * 1
-                                    : color === 2
-                                      ? -240 * 1
-                                      : color === 100
-                                        ? -300 * 1
-                                        : color === 120
-                                          ? -300 * 1
-                                          : -900 * 1 + 30 * color,
-                        }}
-                      />
-                    </button>
-                  )),
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <Header Bomnumber={Bomnumber} uptimer={uptimer} restart={restart} Clear={Clear}>
+          <Board
+            boardData={CC}
+            width={dekasa[0]}
+            height={dekasa[1]}
+            onCellClick={clickHandler}
+            onCellRightClick={clickrightHandler}
+          />
+        </Header>
       </div>
     </div>
   );
