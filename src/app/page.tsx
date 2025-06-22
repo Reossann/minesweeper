@@ -434,6 +434,14 @@ export default function Home() {
       return alert('1000マス以上は処理が追い付かないよ！');
     }
 
+    if (height === 0 || width === 0) {
+      return alert('0マスは空虚だよ');
+    }
+
+    if (height < 0 || width < 0) {
+      return alert('まさか負の数なんかにしようとしてないよね？？？');
+    }
+
     const newboard = [];
     for (let i = 0; i < height; i++) {
       const row = [];
