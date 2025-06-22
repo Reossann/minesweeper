@@ -302,7 +302,7 @@ export default function Home() {
   ]);
 
   const Bomnummake = (Flags: number, bombom: number, Cl: number) => {
-    if (Cl === 1) {
+    if (Cl === 1 || Flags > bombom) {
       return bombom;
     }
     if (Flags === undefined) {
@@ -428,6 +428,9 @@ export default function Home() {
   const custom = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const fromdata = new FormData(event.currentTarget);
+    if (Number(fromdata.get('H')) * Number(fromdata.get('W')) >= 1000) {
+      return alert('1000マス以上は処理が追い付かないよ！');
+    }
     const newboard = [];
     for (let i = 0; i < Number(fromdata.get('H')); i++) {
       const row = [];
@@ -447,6 +450,7 @@ export default function Home() {
     flag.current = true;
     setdekasa([Number(fromdata.get('W')), Number(fromdata.get('H'))]);
     setbombom(Number(fromdata.get('B')));
+    setuptimer(0);
     setuserinputs(newboard);
     setbombmap(newboard);
   };
@@ -518,13 +522,16 @@ export default function Home() {
   };
 
   const clickrightHandler = (x: number, y: number, event: React.MouseEvent) => {
-    if (boooom === 5000 || Clear) {
+    if (boooom === 5000) {
       return;
     }
     event.preventDefault();
     console.log(x, y);
     console.log(50);
     const newboard = structuredClone(userinputs);
+    if (newboard[y][x] === 0 && Ucounts[1] === bombom) {
+      return;
+    }
     if (CC[y][x] < 20) {
       if (newboard[y][x] <= 3) newboard[y][x] += 1;
       if (newboard[y][x] === 3) {
@@ -572,7 +579,7 @@ export default function Home() {
                   <div
                     className={styles.digital}
                     style={{
-                      backgroundPositionX: -29 + Math.floor(Bomnumber / 100) * 21.9,
+                      backgroundPositionX: -29 + Math.floor(Bomnumber / 100) * -21.9,
                       backgroundPositionY: -50,
                     }}
                   />
