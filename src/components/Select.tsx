@@ -49,7 +49,7 @@ export const DifficultySelector = ({
             type="number"
             name="W"
             value={width}
-            onChange={(e) => setWidth(Number(e.target.value))}
+            onChange={(e) => setWidth(Math.floor(Number(e.target.value)))}
           />
           <label htmlFor="H">高さ：</label>
           <input
@@ -58,7 +58,7 @@ export const DifficultySelector = ({
             type="number"
             name="H"
             value={height}
-            onChange={(e) => setHeight(Number(e.target.value))}
+            onChange={(e) => setHeight(Math.floor(Number(e.target.value)))}
           />
           <label htmlFor="B">爆弾数：</label>
           <input
@@ -67,7 +67,7 @@ export const DifficultySelector = ({
             type="number"
             name="B"
             value={bombs}
-            onChange={(e) => setBombs(Number(e.target.value))}
+            onChange={(e) => setBombs(Math.floor(Number(e.target.value)))}
           />
           <button type="submit">更新</button>
         </form>
